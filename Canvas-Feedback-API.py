@@ -5,7 +5,7 @@ import os
 import mimetypes
 
 api_url = "https://canvas.instructure.com/api/v1"
-access_token = "7~9qPhsR4RGA5xD4XvSlO1uR4QgUk4sN5AVbYU6GJjVyHLEKXoRFdmEEpfLcruikL9"
+access_token = "Token" #Use your own Token
 
 # Function to get all students for a given course ID
 def get_students_in_role(course_id, role="student"):
@@ -50,8 +50,6 @@ def get_all_assignments(course_id):
         return None
 
 # Function to upload feedback for a student in a specific assignmen
-
-
 def upload_feedback(course_id, assignment_id, user_id, file_path):
     # Step 1: Notify Canvas about the file
     print(f"{api_url}/courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}/comments/files")
@@ -90,14 +88,16 @@ def upload_feedback(course_id, assignment_id, user_id, file_path):
         files = {file_param_key: (file_name, file)}
         upload_response = requests.post(upload_url, files=files)
 
-        if upload_response.status_code != 200:
+        if upload_response.status_code != 201:
             print(f"Error uploading file. Status code: {upload_response.status_code}")
             print(f"Response content: {upload_response.text}")
             return
 
 
+    
     # Step 3: Follow the redirect to complete the upload
-    completion_url = upload_response.json().get("completion_url")
+   
+    completion_url = upload_response.json().get("url")
     completion_response = requests.get(completion_url)
 
     if completion_response.status_code != 200:
@@ -106,6 +106,7 @@ def upload_feedback(course_id, assignment_id, user_id, file_path):
         return
 
     print("File uploaded successfully for feedback")
+    
 # Create a map from course names to their numeric IDs
 course_name_to_id = {}
 
