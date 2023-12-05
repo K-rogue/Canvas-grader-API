@@ -4,7 +4,7 @@ import requests
 import os
 import mimetypes
 
-api_url = "https://canvas.instructure.com/api/v1"
+api_url = "https://canvas.instructure.com/api/v1"   #Insert your own URL
 access_token = "7~9qPhsR4RGA5xD4XvSlO1uR4QgUk4sN5AVbYU6GJjVyHLEKXoRFdmEEpfLcruikL9" #Use your own Token
 
 # Function to get all students for a given course ID
@@ -52,7 +52,7 @@ def get_all_assignments(course_id):
 # Function to upload feedback for a student in a specific assignmen
 def upload_feedback(course_id, assignment_id, user_id, file_path):
     # Step 1: Notify Canvas about the file
-    print(f"{api_url}/courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}/comments/files")
+   
     notify_url = f"{api_url}/courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}/comments/files"
     notify_headers = {"Authorization": f"Bearer {access_token}"}
 
