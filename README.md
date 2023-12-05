@@ -27,4 +27,4 @@ Canvas Feedback Uploader is a Python script that simplifies the process of uploa
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/canvas-feedback-uploader.git
+   git clone https://github.com/K-rogue/canvas-feedback-uploader.git
