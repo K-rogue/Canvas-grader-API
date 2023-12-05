@@ -5,7 +5,7 @@ import os
 import mimetypes
 
 api_url = "https://canvas.instructure.com/api/v1"   #Insert your own URL
-access_token = "7~9qPhsR4RGA5xD4XvSlO1uR4QgUk4sN5AVbYU6GJjVyHLEKXoRFdmEEpfLcruikL9" #Use your own Token
+access_token = "" #Use your own Token
 
 # Function to get all students for a given course ID
 def get_students_in_role(course_id, role="student"):
