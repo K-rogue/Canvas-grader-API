@@ -16,7 +16,7 @@ class CanvasGUI(QWidget):
         self.canvas_instance = Canvas(api_url, access_token)
         self.course_name_to_id = {}
         self.selected_course_id = None
-        self.file_path_entry = QLineEdit()
+      
 
         self.init_ui()
 
@@ -46,15 +46,13 @@ class CanvasGUI(QWidget):
         # Drop area using QListWidget
         self.drop_area = QListWidget()
         self.drop_area.setAcceptDrops(True)
-        self.drop_area.setMinimumHeight(100)  # Set the minimum height (adjust as needed)
+        self.drop_area.setMinimumHeight(100) # Set the minimum height (adjust as needed)
         self.drop_area.setSelectionMode(QAbstractItemView.MultiSelection)  # Allow multiple items to be selected
         self.drop_area.itemDoubleClicked.connect(self.remove_selected_item)
         self.drop_area.keyPressEvent = self.keyPressEvent  # Override keyPressEventS
         layout.addWidget(QLabel("Drop Files Here:"))
         layout.addWidget(self.drop_area)
         
-        layout.addWidget(QLabel("File Path:"))
-        layout.addWidget(self.file_path_entry)
 
         # Browse button
         browse_button = QPushButton("Browse")
@@ -88,8 +86,8 @@ class CanvasGUI(QWidget):
                 # Check if the path points to a file
                 if os.path.isfile(file_path):
                     # Extract the filename from the full path
-                    file_name = os.path.basename(file_path)
-                    item = QListWidgetItem(file_name)
+        
+                    item = QListWidgetItem(file_path)
                     self.drop_area.addItem(item)
 
     def dragEnterEvent(self, event: QDragEnterEvent):
@@ -149,7 +147,7 @@ class CanvasGUI(QWidget):
         file_paths, _ = QFileDialog.getOpenFileNames(self, "Open Files", "", "All Files (*);;Text Files (*.txt)")
         
         # Extract only the filenames from the full paths
-        file_names = [QFileInfo(file_path).fileName() for file_path in file_paths]
+        file_names = [QFileInfo(file_path) for file_path in file_paths]
 
         # Display the filenames in the drag and drop box
         self.add_files_to_drop_area(file_names)

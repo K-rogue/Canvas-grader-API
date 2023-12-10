@@ -7,6 +7,19 @@ class Canvas:
         self.api_url = api_url
         self.access_token = access_token
 
+    def get(self, url, params=None, headers=None):
+        full_url = f"{self.api_url}/{url}"
+        headers = headers or {}
+        headers["Authorization"] = f"Bearer {self.access_token}"
+
+        response = requests.get(full_url, params=params, headers=headers)
+
+        if response.status_code == 200:
+            return response
+        else:
+            print(f"Error in GET request. Status code: {response.status_code}")
+            print(f"Response content: {response.text}")
+            return None
 
     def get_all_courses(self):
         url = f"{self.api_url}/courses"
@@ -107,12 +120,12 @@ class Canvas:
             print(f"Response content: {completion_response.text}")
             return False
 
-    def update_submission(self, course_id, assignment_id, user_id, file_id):
+    def update_submission(self, course_id, assignment_id, user_id, file_ids):
         submission_url = f"{self.api_url}/courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}"
         payload = {
             "submission_type": "online_upload",
             "comment": {
-                "file_ids": [[file_id]],
+                "file_ids": [file_ids],
                 # Add any other necessary fields
             }
         }
