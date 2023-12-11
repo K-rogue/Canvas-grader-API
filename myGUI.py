@@ -155,11 +155,8 @@ class CanvasGUI(QWidget):
 
     def browse_file(self):
         file_paths, _ = QFileDialog.getOpenFileNames(self, "Open Files", "", "All Files (*);;Text Files (*.txt)")
-        
-        
-
         # Display the filenames in the drag and drop box
-        self.add_files_to_drop_area(file_names)
+        self.add_files_to_drop_area(file_paths)
 
     def add_files_to_drop_area(self, file_names):
         # Add the filenames to the drag and drop box
