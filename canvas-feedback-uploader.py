@@ -3,7 +3,7 @@ from tkinter import ttk, filedialog
 from canvasapi import Canvas  # Assuming you save your Canvas class in a file called canvas_class.py
 
 api_url = "https://canvas.instructure.com/api/v1"   # Insert your own URL
-access_token = "7~JbNRv3p9H0Rr0FxYS4Mt9cQUdfZhvxAz0izZBsB2ULa50CHbN4gMkDJ0MIKIuPOv"  # Use your own Token
+access_token = "ACCESS-TOKEN"  # Use your own Token
 
 def update_dropdowns(event):
     # Get the selected course name
