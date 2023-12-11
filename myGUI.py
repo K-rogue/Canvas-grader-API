@@ -108,8 +108,13 @@ class CanvasGUI(QWidget):
 
     def remove_selected_item(self, item):
         self.drop_area.takeItem(self.drop_area.row(item))
+
+    
     
     def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            self.perform_canvas_action()
+
         if event.key() in [Qt.Key_Backspace, Qt.Key_Delete]:
             for item in self.drop_area.selectedItems():
                 row = self.drop_area.row(item)
@@ -161,6 +166,9 @@ class CanvasGUI(QWidget):
     def add_files_to_drop_area(self, file_names):
         # Add the filenames to the drag and drop box
         self.drop_area.addItems(file_names)
+    
+    def clear_drop_area(self):
+        self.drop_area.clear()
 
 
     def perform_canvas_action(self):
@@ -193,3 +201,5 @@ class CanvasGUI(QWidget):
                 print(f"Error: Student '{student_name}' not found.")
         else:
             print(f"Error: Course '{course_name}' not found.")
+
+        self.clear_drop_area()
