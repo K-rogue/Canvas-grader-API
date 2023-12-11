@@ -19,8 +19,9 @@ Canvas Feedback Uploader is a Python script that simplifies the process of uploa
 
 ## Usage
 
-1. Configure your Canvas API credentials in the script (`api_url`, `access_token`).
-2. Run the script: `python upload_feedback.py`
+1. Configure your Canvas API credentials in the script (`CANVAS_API_URL`, `CANVAS_ACCESS_TOKEN`) in canvas-feedback-uploader.py.
+2. Install required Python packages using `pip install -r requirements.txt`
+3. Run the script: `python canvas-feedback-uploader.py`
 
 ## Installation
 

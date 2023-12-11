@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QComboBox, QLabel, QPushButton, QFileDialog, QLineEdit
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDragEnterEvent, QDropEvent
+from PyQt5.QtGui import QDragEnterEvent, QDropEvent, QIcon
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
 from PyQt5.QtCore import QFileInfo
@@ -60,7 +60,7 @@ class CanvasGUI(QWidget):
         layout.addWidget(browse_button)
 
         # Perform Canvas Action button
-        action_button = QPushButton("Perform Canvas Action")
+        action_button = QPushButton("Upload Feedback")
         action_button.clicked.connect(self.perform_canvas_action)
         layout.addWidget(action_button)
 
@@ -69,8 +69,18 @@ class CanvasGUI(QWidget):
         # Enable drag and drop for the entire widget
         self.setAcceptDrops(True)
 
-        self.setGeometry(300, 300, 500, 400)
-        self.setWindowTitle('Canvas API Support')
+        script_path = os.path.abspath(__file__)
+
+        # Get the directory of the script
+        script_directory = os.path.dirname(script_path)
+
+        # Set window icon using the icon file in the same directory
+        icon_path = os.path.join(script_directory, 'icon.png')
+        icon = QIcon(icon_path)
+        self.setWindowIcon(icon)
+
+        self.setGeometry(500, 200, 400, 450)
+        self.setWindowTitle('Canvas Feedback Tool')
         self.show()
 
     def remove_selected_files(self):
@@ -130,7 +140,7 @@ class CanvasGUI(QWidget):
 
             if students:
                 self.student_dropdown.clear()
-                self.student_dropdown.addItem("Auto-find Student (Based on File Name)")
+               
 
                 for student in students:
                     self.student_dropdown.addItem(student["name"])
@@ -146,8 +156,7 @@ class CanvasGUI(QWidget):
     def browse_file(self):
         file_paths, _ = QFileDialog.getOpenFileNames(self, "Open Files", "", "All Files (*);;Text Files (*.txt)")
         
-        # Extract only the filenames from the full paths
-        file_names = [QFileInfo(file_path) for file_path in file_paths]
+        
 
         # Display the filenames in the drag and drop box
         self.add_files_to_drop_area(file_names)
@@ -161,13 +170,12 @@ class CanvasGUI(QWidget):
         course_name = self.course_dropdown.currentText()
         student_name = self.student_dropdown.currentText()
         assignment_name = self.assignment_dropdown.currentText()
-        file_path = self.file_path_entry.text()
+        file_paths = [self.drop_area.item(i).text() for i in range(self.drop_area.count())]
 
-        if not file_path:
+        if not file_paths:
             print("Error: File path is empty.")
             return
 
-        print(file_path)
 
         if self.selected_course_id:
             students = self.canvas_instance.get_students_in_role(self.selected_course_id)
@@ -181,15 +189,10 @@ class CanvasGUI(QWidget):
 
                 if selected_assignment:
                     assignment_id = selected_assignment["id"]
-                    self.canvas_instance.upload_feedback(self.selected_course_id, assignment_id, user_id, file_path)
+                    self.canvas_instance.upload_feedback_batch(self.selected_course_id, assignment_id, user_id, file_paths)
                 else:
                     print(f"Error: Assignment '{assignment_name}' not found.")
             else:
                 print(f"Error: Student '{student_name}' not found.")
         else:
             print(f"Error: Course '{course_name}' not found.")
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = CanvasGUI("https://canvas.instructure.com/api/v1", "7~JbNRv3p9H0Rr0FxYS4Mt9cQUdfZhvxAz0izZBsB2ULa50CHbN4gMkDJ0MIKIuPOv")
-    sys.exit(app.exec_())

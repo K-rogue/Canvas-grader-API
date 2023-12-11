@@ -1,6 +1,7 @@
 import requests
 import os
 import mimetypes
+import datetime
 
 class Canvas:
     def __init__(self, api_url, access_token):
@@ -129,7 +130,6 @@ class Canvas:
                 # Add any other necessary fields
             }
         }
-
         put_response = requests.put(submission_url, headers={"Authorization": f"Bearer {self.access_token}"}, json=payload)
 
         if put_response.status_code == 200:
@@ -138,23 +138,31 @@ class Canvas:
             print(f"Error updating submission. Status code: {put_response.status_code}")
             print(f"Response content: {put_response.text}")
 
-    def upload_feedback(self, course_id, assignment_id, user_id, file_path):
-        try:
-            # Step 1: Notify Canvas about the file
-            upload_url, file_param_key = self.notify_canvas(course_id, assignment_id, user_id, file_path)
+    def upload_feedback_batch(self, course_id, assignment_id, user_id, file_paths):
+        file_ids = []
 
-            if upload_url is None:
-                return
+        for file_path in file_paths:
+            try:
+                # Step 1: Notify Canvas about the file
+                upload_url, file_param_key = self.notify_canvas(course_id, assignment_id, user_id, file_path)
 
-            # Step 2: Upload the file using the information from the first request
-            file_id = self.upload_file(upload_url, file_param_key, file_path)
+                if upload_url is None:
+                    continue
 
-            if file_id is None:
-                return
-           
-            # Step 4: Update the submission with the uploaded file
-            self.update_submission(course_id, assignment_id, user_id, file_id)
-       
+                # Step 2: Upload the file using the information from the first request
+                file_id = self.upload_file(upload_url, file_param_key, file_path)
 
-        except Exception as e:
-            print(f"An error occurred: {str(e)}")
+                if file_id is None:
+                    continue
+
+                file_ids.append(file_id)
+
+            except Exception as e:
+                print(f"Error uploading feedback for file '{file_path}': {str(e)}")
+
+        # Step 4: Update the submission with the uploaded files
+        self.update_submission(course_id, assignment_id, user_id, file_ids)
+
+
+        
+
